@@ -8,7 +8,7 @@ import time
 DIFFICULTY_TARGET = "0000ffff00000000000000000000000000000000000000000000000000000000"
 MEMPOOL_DIR = "mempool"
 BLOCK_HEIGHT = 620000
-PREV_BLOCK_HASH = "0000000000000000000000000000000000000000000000000000000000000000"  # Replace with the actual previous block hash
+PREV_BLOCK_HASH = "0000000000000000000000000000000000000000000000000000000000000000"
 
 def sha256(data):
     return hashlib.sha256(data).digest()
@@ -95,7 +95,7 @@ def mine_block(transactions):
     prev_block_hash = PREV_BLOCK_HASH
     merkle_root = calculate_merkle_root(valid_transactions)
     timestamp = int(time.time())
-    bits = unhexlify(DIFFICULTY_TARGET)
+    bits = unhexlify(DIFFICULTY_TARGET)[::-1]
 
     while True:
         block_header = struct.pack("<I", version) + \
@@ -105,7 +105,7 @@ def mine_block(transactions):
                        bits + \
                        struct.pack("<I", nonce)
         
-        block_hash = hexlify(double_sha256(block_header)).decode()
+        block_hash = hexlify(double_sha256(block_header)[::-1]).decode()
         
         if block_hash < DIFFICULTY_TARGET:
             print("Block mined successfully with hash:", block_hash)
